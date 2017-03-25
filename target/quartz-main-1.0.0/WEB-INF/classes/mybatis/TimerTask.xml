@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.free.hwt.quartz.mapper.TimerTaskMapper">
+     
+	 <resultMap id="taskMap" type="taskModel">
+	 	<result column="id" property="id" jdbcType="BIGINT" />
+	 	<result column="userid" property="userId" jdbcType="BIGINT" />
+	 	<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="jobname" property="jobName" jdbcType="VARCHAR" />
+		<result column="jobgroup" property="jobGroup" jdbcType="VARCHAR" />
+    	<result column="triggername" property="triggerName" jdbcType="VARCHAR" />
+    	<result column="triggergroup" property="triggerGroup" jdbcType="VARCHAR" />
+    	<result column="triggertype" property="triggerType" jdbcType="INTEGER" />
+		<result column="targeturl" property="targetUrl" jdbcType="VARCHAR" />
+		<result column="parameters" property="parameters" jdbcType="VARCHAR" />
+		<result column="cronexpress" property="cronExpress" jdbcType="VARCHAR" />
+		<result column="repeatcount" property="repeatCount" jdbcType="INTEGER" />
+		<result column="starttime" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="endtime" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="repeatinterval" property="repeatInterval" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	 	<result column="actiontime" property="actionTime" jdbcType="TIMESTAMP" />
+	 	<result column="createtime" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+
+	<sql id="result">
+		a.id as id,
+		a.userid as userid,
+		b.name as name,
+		a.jobname as jobname,
+		a.triggername as triggername,
+		a.jobgroup as jobgroup,
+		a.triggergroup as triggergroup,
+		a.triggertype as triggertype,
+		a.targeturl as targeturl,
+		a.parameters as parameters,
+		a.cronexpress as cronexpress,
+		a.repeatcount as repeatcount,
+		a.starttime as starttime,
+		a.endtime as endtime,
+		a.repeatinterval as repeatinterval,
+		a.status as status,
+		a.createtime as createtime
+	</sql>
+	<!-- 删除任务的详细信息 -->
+	<delete id="deleteTimerTask" parameterType="taskModel">
+		delete from tbl_quartz_jobdetail where 
+			<if test="id!=null"> id = #{id} </if>
+			<if test="jobName !=null"> obname= #{jobName} </if>  
+	</delete>
+	
+	<!-- 根据任务id取得任务的详细信息 -->
+	<select id="getTimerTaskInfo" parameterType="taskModel"  resultType="taskModel">
+		select <include refid="result"></include> from tbl_quartz_jobdetail a,tbl_quartz_user b where a.userid = b.id 
+		<if test="id!=null">and a.id = #{id} </if>
+			<if test="jobName !=null"> and a.jobname= #{jobName} </if>  
+	</select>
+	
+	<!-- 分页取得用户所创建的所有任务的详细信息 -->
+	<select id="getAllTimerTaskInfoByPage" parameterType="taskModel"  resultMap="taskMap">
+		select 
+			<include refid="result"></include> 
+		from 
+			tbl_quartz_jobdetail a,
+			tbl_quartz_user b 
+		where 
+			a.userid = b.id  
+			<if test="userRole==2"> and b.organizationcode = #{organizationCode} </if>
+			<if test="userRole==4"> and a.userid= #{userId} </if> 
+		order by 
+			a.createtime desc 
+		limit 
+			#{start},#{pageSize}
+	</select>
+	
+	<!-- 取得用户所创建的所有任务的详细信息 -->
+	<select id="getAllTimerTaskInfo" parameterType="Integer"  resultMap="taskMap">
+		select * from tbl_quartz_jobdetail where userid = #{userId} order by createtime desc
+	</select>
+
+	<!-- 取得用户所创建的取得所有任务的条数 -->
+	<select id="getAllTimerTaskCount" parameterType="taskModel"  resultType="Integer">
+		select 
+			count(*) 
+		from 
+			tbl_quartz_jobdetail a,
+			tbl_quartz_user b 
+		where 
+			a.userid = b.id 
+			<if test="userRole==2"> and b.organizationcode = #{organizationCode} </if>
+			<if test="userRole!=1"> and userid = #{userId}</if> 
+	</select>
+	
+	<!-- 修改任务状态 -->
+	<update id="modifyJobStatus" parameterType="taskModel">
+		update tbl_quartz_jobdetail 
+			set status = #{status} 
+		where
+			 id = #{id}
+	</update>
+	
+	<!-- 新增任务的详细信息 -->
+	<insert id="addTimerTask" parameterType="taskModel">
+		insert into tbl_quartz_jobdetail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				userid,
+			</if>
+			<if test="jobName != null">
+				jobname,
+			</if>
+			<if test="jobGroup != null">
+				jobgroup,
+			</if>
+			<if test="triggerName != null">
+				triggername,
+			</if>
+			<if test="triggerGroup != null">
+				triggergroup,
+			</if>
+			<if test="triggerType != null">
+				triggertype,
+			</if>
+			<if test="targetUrl != null">
+				targeturl,
+			</if>
+			<if test="parameters != null">
+				parameters,
+			</if>
+			<if test="cronExpress != null">
+				cronexpress,
+			</if>
+			<if test="repeatCount != null">
+				repeatcount,
+			</if>
+			<if test="startTime != null">
+				starttime,
+			</if>
+			<if test="endTime != null">
+				endtime,
+			</if>
+			<if test="repeatInterval != null">
+				repeatinterval,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="actionTime != null">
+				actiontime,
+			</if>
+			<if test="createTime != null">
+				createtime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="jobName != null">
+				#{jobName},
+			</if>
+			<if test="jobGroup != null">
+				#{jobGroup},
+			</if>
+			<if test="triggerName != null">
+				#{triggerName},
+			</if>
+			<if test="triggerGroup != null">
+				#{triggerGroup},
+			</if>
+			<if test="triggerType != null">
+				#{triggerType},
+			</if>
+			<if test="targetUrl != null">
+				#{targetUrl},
+			</if>
+			<if test="parameters != null">
+				#{parameters},
+			</if>
+			<if test="cronExpress != null">
+				#{cronExpress},
+			</if>
+			<if test="repeatCount != null">
+				#{repeatCount},
+			</if>
+			<if test="startTime != null">
+				#{startTime},
+			</if>
+			<if test="endTime != null">
+				#{endTime},
+			</if>
+			<if test="repeatInterval != null">
+				#{repeatInterval},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="actionTime != null">
+				#{actionTime},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+		</trim>
+	</insert>
+</mapper>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.free.hwt.quartz.mapper.OrganizationMapper">
+     
+	 <resultMap id="organizationMap" type="organizationModel">
+	 	<result column="id" property="id" jdbcType="BIGINT" />
+	 	<result column="organization" property="organization" jdbcType="VARCHAR" />
+	 	<result column="organizationcode" property="organizationCode" jdbcType="BIGINT" />
+	 	<result column="administratorid" property="administratorId" jdbcType="BIGINT" />
+	 	<result column="username" property="adminUsername" jdbcType="VARCHAR" />
+	 	<result column="name" property="adminName" jdbcType="VARCHAR" />
+	 	<result column="phone" property="adminPhone" jdbcType="BIGINT" />
+	 	<result column="status" property="status" jdbcType="VARCHAR" />
+	 	<result column="actiontime" property="actionTime" jdbcType="TIMESTAMP" />
+	 	<result column="createtime" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<sql id="result">
+		a.id as id,
+		a.organization as organization,
+		a.organizationcode as organizationcode,
+		a.status as status,
+		b.id as administratorid,
+		b.phone as phone,
+		b.username as username,
+		b.name as name,
+		a.createtime as createtime,
+		a.actiontime as actiontime
+	</sql>
+	
+	<select id="getAllOrganizationInfo" resultMap="organizationMap">
+		select <include refid="result"/> 
+			from 
+				tbl_quartz_organization a left join tbl_quartz_user b 
+			on 
+				a.organizationcode = b.organizationcode and a.administratorid = b.id 
+			order by 
+				a.createtime desc 
+			limit 
+				#{start},#{pageSize}
+	</select>
+	
+	<select id="getAdminIdByCode" resultType="Integer" parameterType="Integer" >
+		select administratorid from tbl_quartz_organization where organizationcode = #{organizationCode}
+	</select>
+	
+	<select id="getOrganizationCount" resultType="Integer">
+		select count(*) from tbl_quartz_organization
+	</select>
+	<select id="checkOrgExist" resultType="organizationModel" parameterType="organizationModel">
+		select * from tbl_quartz_organization where organization = #{organization} and organizationcode = #{organizationCode};
+	</select>
+	
+	<!-- 修改组织信息-->
+    <update id="updateOrganizationStatus" parameterType="organizationModel">
+  		update tbl_quartz_organization set actiontime = #{actionTime}
+  		<if test="organization!=null">
+  			,organization = #{organization}
+  		</if> 
+  		<if test="status!=null">
+  			,status = #{status}
+  		</if> 
+  		where id = #{id}
+	</update>
+	
+	<!-- 新增组织管理员信息-->
+    <update id="setOrganizationAdmin" parameterType="organizationModel">
+  		update tbl_quartz_organization set actiontime = #{actionTime}
+  		<if test="administratorId!=null">
+  			,administratorid = #{administratorId}
+  		</if> 
+  		<if test="status!=null">
+  			,status = #{status}
+  		</if> 
+  		where organizationcode = #{organizationCode}
+	</update>
+	
+	<!-- 删除组织信息 -->
+	<delete id="deleteOrganization" parameterType="organizationModel">
+		delete from tbl_quartz_organization where id = #{id}
+	</delete>
+
+	<!-- 添加组织信息 -->
+	<insert id="addOrganization" parameterType="organizationModel">
+		insert into tbl_quartz_organization
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="organization != null">
+				organization,
+			</if>
+			<if test="organizationCode != null">
+				organizationcode,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="actionTime != null">
+				actiontime,
+			</if>
+			<if test="createTime != null">
+				createtime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="organization != null">
+				#{organization},
+			</if>
+			<if test="organizationCode != null">
+				#{organizationCode},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="actionTime != null">
+				#{actionTime},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+		</trim>
+	</insert>
+</mapper>

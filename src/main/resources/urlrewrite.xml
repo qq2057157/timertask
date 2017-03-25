@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE urlrewrite
+      PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN"
+      "http://urlrewritefilter.googlecode.com/svn-history/r275/trunk/src/java/org/tuckey/web/filters/urlrewrite/dtds/urlrewrite3.0.dtd">
+
+<!-- urlrewritefilter过滤规则配置文件 -->
+<urlrewrite>
+
+	<rule>
+	<from>^/$</from>
+		<to>/login.jsp</to>
+	</rule>
+	
+	<!-- 用户登录注册模块start -->
+	
+	<!-- 用户登录 -->
+	<rule>
+		<from>^/passport/login$</from>
+		<to>/passport/user/login.do</to>
+	</rule>
+	
+	<!-- 用户登出 -->
+	<rule>
+		<from>^/passport/logout$</from>
+		<to>/passport/user/logout.do</to>
+	</rule>
+	
+	<!-- 用户注册 -->
+	<rule>
+		<from>^/passport/register$</from>
+		<to>/passport/user/register.do</to>
+	</rule>
+	<!-- 判断用户名是否已被注册过 -->
+	<rule>
+		<from>^/passport/validateExist$</from>
+		<to>/passport/user/validateExist.do</to>
+	</rule>
+	<!-- 判断组织是否存在 -->
+	<rule>
+		<from>^/passport/checkOrgExist$</from>
+		<to>/passport/user/checkOrgExist.do</to>
+	</rule>
+	
+	<!-- 用户登录注册模块end -->
+	
+	<!-- 任务管理模块start -->
+	
+	<!-- 定时任务管理主界面 -->
+	<rule>
+		<from>^/timer/task/main$</from>
+		<to>/timer/task/main.do</to>
+	</rule>
+	
+	<!-- 添加定时任务 -->
+	<rule>
+		<from>^/timer/task/add$</from>
+		<to>/timer/task/add.do</to>
+	</rule>
+	
+	<!-- 启动定时任务 -->
+	<rule>
+		<from>^/timer/task/start$</from>
+		<to>/timer/task/start.do</to>
+	</rule>
+	
+	<!-- 终止定时任务 -->
+	<rule>
+		<from>^/timer/task/stop$</from>
+		<to>/timer/task/stop.do</to>
+	</rule>
+	
+	<!-- 删除定时任务 -->
+	<rule>
+		<from>^/timer/task/delete$</from>
+		<to>/timer/task/delete.do</to>
+	</rule>
+	<!-- 任务管理模块end -->
+	
+	<!-- 组织管理模块start -->
+	
+	<!-- 组织管理模块主界面 -->
+	<rule>
+		<from>^/timer/org/main$</from>
+		<to>/timer/org/main.do</to>
+	</rule>
+	
+	<!-- 新增组织信息 -->
+	<rule>
+		<from>^/timer/org/add$</from>
+		<to>/timer/org/add.do</to>
+	</rule>
+	
+	<!-- 为组织设置管理员 -->
+	<rule>
+		<from>^/timer/org/addAdmin$</from>
+		<to>/timer/org/addAdmin.do</to>
+	</rule>
+	
+	<!-- 封禁组织 -->
+	<rule>
+		<from>^/timer/org/disable$</from>
+		<to>/timer/org/disable.do</to>
+	</rule>
+	
+	<!-- 解禁组织 -->
+	<rule>
+		<from>^/timer/org/enable$</from>
+		<to>/timer/org/enable.do</to>
+	</rule>
+	
+	<!-- 删除组织 -->
+	<rule>
+		<from>^/timer/org/delete$</from>
+		<to>/timer/org/delete.do</to>
+	</rule>
+	<!-- 组织管理模块end -->
+	
+	<!-- 用户管理模块start -->
+	<rule>
+		<from>^/timer/user/main$</from>
+		<to>/timer/user/main.do</to>
+	</rule>
+	<!-- 修改密码 -->
+	<rule>
+		<from>^/timer/user/modifypassword$</from>
+		<to>/timer/user/modifypassword.do</to>
+	</rule>
+	<!-- 封禁用户 -->
+	<rule>
+		<from>^/timer/user/disable$</from>
+		<to>/timer/user/disable.do</to>
+	</rule>
+	
+	<!-- 解禁用户 -->
+	<rule>
+		<from>^/timer/user/enable$</from>
+		<to>/timer/user/enable.do</to>
+	</rule>
+	
+	<!-- 删除用户 -->
+	<rule>
+		<from>^/timer/user/delete$</from>
+		<to>/timer/user/delete.do</to>
+	</rule>
+	<!-- 设置用户为管理员 -->
+	<rule>
+		<from>^/timer/user/setAdmin$</from>
+		<to>/timer/user/setAdmin.do</to>
+	</rule>
+	<!-- 新增用户 -->
+	<rule>
+		<from>^/timer/user/add$</from>
+		<to>/timer/user/add.do</to>
+	</rule>
+	
+	<!-- 用户管理模块end -->
+</urlrewrite>
